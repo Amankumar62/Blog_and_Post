@@ -1,22 +1,26 @@
 import React, { Component } from 'react';
 //import axios from 'axios';
-import {Route ,NavLink,Switch} from 'react-router-dom';
+import {Route ,NavLink,Switch,Redirect} from 'react-router-dom';
 
 import './Blog.css';
 import Posts from './Posts/Posts';
 import NewPost from './NewPost/NewPost';
-import FullPost from './FullPost/FullPost';
+
 class Blog extends Component {
 
+    state={
+        auth:false,
+    }
     componentDidMount() {
+        // if unauth  =>  this.props.history.replace('/posts');
         console.log(this.props);
     }
 
     render () {  
-        return (
+        return ( 
             <div className="Blog">
             <header>
-            <nav>
+            <nav>              
             <ul>
             <li><NavLink
             activeClassName='my-active' 
@@ -24,7 +28,7 @@ class Blog extends Component {
                 color: '#fa923f',
                 textDecoration: 'underline'
             }}
-            to ="/" 
+            to ="/posts/" 
             exact>Posts</NavLink></li>
             <li><NavLink to={{
                 pathname: '/new-post',
@@ -35,10 +39,12 @@ class Blog extends Component {
             </nav>
             </header>
              {/* <Route path="/" exact render={() =><h1>Home</h1>}/>*/}
-             <Route path="/" exact component={Posts} />
+        
              <Switch>
-             <Route path="/new-post" exact component={NewPost} />
-             <Route path="/:id" exact component={FullPost}/>
+             {this.state.auth ? <Route path="/new-post" exact component={NewPost} /> : null}
+             <Route path="/posts" component={Posts} />
+             <Route render={() => <h1>Not found</h1>}/>
+            {/*  <Redirect from="/" to="/posts"/>*/}
              </Switch>
             </div>
         );  
